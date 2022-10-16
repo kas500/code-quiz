@@ -1,57 +1,73 @@
 var quiz = [];
 //object to store question with single choise
-var singleChoiseQ = {
-    question: "",
-    answers: [],
-    correctIndex: 0
-};
+
 //object to store question with multiple choise
-var multipleChoiseQ = {
-    question: "",
-    answers: [],
-    correctIndexes: []
-};
+
 //object to store question with true/false statement
-var trueFalseQ = {
-    question: "",
-    correctAnswer: false 
-};
+
 //create array with questions and answers
-var initArr = [ "~Qs: Inside which HTML element do we put the JavaScript?", "<js>","<javascript>","<code>","<script>+",
-                "~Qs: Where is the correct place to insert a JavaScript?", "<head>","<body>","both are correct+","<title>",
-                "~Qm: Select all primitive data.","number+","string+","boolean+","Object",
+var initArr = [ "~Qs: Inside which HTML element do we put the JavaScript?", "<js>","<javascript>","<code>","<script>`",
+                "~Qs: Where is the correct place to insert a JavaScript?", "<head>","<body>","both are correct`","<title>",
+                "~Qm: Select all primitive data.","number`","string`","boolean`","Object",
                 "~Qb: JavaScript is the same as Java.", "false",
-                "~Qs: Which event occurs when the user clicks on an HTML element?","onmouseclick","onclick+","onchange","onmouseover",
-                "~Qs: Which operator is used to assign a value to a variable?", "*","-","=+","%",
+                "~Qs: Which event occurs when the user clicks on an HTML element?","onmouseclick","onclick`","onchange","onmouseover",
+                "~Qs: Which operator is used to assign a value to a variable?", "*","-","=`","%",
                 "~Qb: JavaScript is case-sensitive language.", "true",
-                "~Qs: How do you write 'Hello World' in an alert box?", "alert('Hello World')+","alertBox(Hello World)","msg('Hello World')","prompt('Hello World')"];
+                "~Qs: How do you write 'Hello World' in an alert box?", "alert('Hello World')`","alertBox(Hello World)","msg('Hello World')","prompt('Hello World')"];
 
 var count = 0;
 for (let index = 0; index < initArr.length; index++) {
     if(initArr[index].includes("~Q")){
         if(initArr[index].charAt(2)==="s"){
-            console.log(initArr[index]);
-            console.log("single");
+            var singleChoiseQ = {
+                qName: "",
+                answers: [],
+                correctAnswer: ""
+            };
+            singleChoiseQ.qName = initArr[index];
             count = 1;
             while(count<=4){
-                console.log(initArr[index+count]);
+                var subIndex = index+count
+                if(initArr[subIndex].charAt(initArr[subIndex].length-1)==="`"){
+                    initArr[subIndex]=initArr[subIndex].replace("`","");
+                    singleChoiseQ.correctAnswer = initArr[subIndex];
+                }
+                singleChoiseQ.answers.push(initArr[subIndex]);
                 count++;
-            }
+            }   
+            quiz.push(singleChoiseQ);
         }
         if(initArr[index].charAt(2)==="m"){
-            console.log(initArr[index]);
-            console.log("multiple");
+            var multipleChoiseQ = {
+                qName: "",
+                answers: [],
+                correctAnswers: []
+            };
+            multipleChoiseQ.qName = initArr[index];
             count = 1;
             while(count<=4){
-                console.log(initArr[index+count]);
+                var subIndex = index+count
+                if(initArr[subIndex].charAt(initArr[subIndex].length-1)==="`"){
+                    initArr[subIndex]=initArr[subIndex].replace("`","");
+                    multipleChoiseQ.correctAnswers.push(initArr[subIndex]);
+                }
+                multipleChoiseQ.answers.push(initArr[subIndex]);
                 count++;
             }
+            quiz.push(multipleChoiseQ);
         }
         if(initArr[index].charAt(2)==="b"){
-            console.log(initArr[index]);
-            console.log("boolean");
-            console.log(initArr[index+1]);
+            var trueFalseQ = {
+                qName: "",
+                correctAnswer: false 
+            };
+            trueFalseQ.qName = initArr[index];
+            trueFalseQ.correctAnswer = (initArr[index+1]==="true")?true:false;
+            quiz.push(trueFalseQ);
         }
+
     }
     
 }
+
+console.log(quiz);
