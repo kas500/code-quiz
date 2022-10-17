@@ -1,6 +1,19 @@
 var quiz = [];
+var qNum = 1;
+var h1El = document.querySelector("h1");
+var formEl = document.querySelector("#studentInfo");
 var buttonStart = document.querySelector("#start");
+var buttonAnswer = document.querySelector("#answer");
 var studentNameField = document.querySelector("#studentName");
+var studentName = studentNameField.value;
+var pEl = document.querySelector("p");
+var spanCurrentNum = document.querySelector("#currentNum");
+var spanTotalNum = document.querySelector("#totalNum");
+
+pEl.style.visibility = "hidden";
+buttonAnswer.style.visibility = "hidden";
+
+
 localStorage.setItem("studentName","") ;
 localStorage.setItem("maxScore", "");
 
@@ -9,10 +22,67 @@ buttonStart.addEventListener("click", function(event){
         event.preventDefault();
         clearQuestions()
         questionsArrayGenerator();
+        h1El.remove();
+        formEl.remove();
+        createQuestionCard();
     }
     else alert("Please enter your name");
-    
 });
+
+buttonAnswer.addEventListener("click", function(event){
+    event.preventDefault();
+    if(qNum<quiz.length){
+        qNum++;
+        document.querySelector("#questionName").remove();
+        createQuestionCard();
+    }
+    else if (qNum==quiz.length){
+        buttonAnswer.style.visibility = "hidden";
+    }
+});
+
+function createQuestionCard(){
+    var currentQuestionNum = qNum;
+    var totalQuestionsNum = quiz.length;
+    spanCurrentNum.innerHTML = currentQuestionNum;
+    spanTotalNum.innerHTML = totalQuestionsNum;
+    pEl.style.visibility = "visible";
+    buttonAnswer.style.visibility = "visible";
+    var questionName = document.createElement("p");
+    questionName.setAttribute("id", "questionName");
+    var ulEl = document.createElement("ul");
+    ulEl.setAttribute("id", "listOfAnswers");
+    questionName.innerHTML = quiz[currentQuestionNum-1].qName;
+    pEl.appendChild(questionName);
+    questionName.appendChild(ulEl);
+    if(quiz[currentQuestionNum-1].qType==="single"){
+        for (let index = 0; index < quiz[currentQuestionNum-1].answers.length; index++) {
+            var li = document.createElement("li");
+            li.textContent = quiz[currentQuestionNum-1].answers[index];
+            ulEl.appendChild(li);
+        }
+    }
+    if(quiz[currentQuestionNum-1].qType==="multiple"){
+        for (let index = 0; index < quiz[currentQuestionNum-1].answers.length; index++) {
+            var li = document.createElement("li");
+            li.textContent = quiz[currentQuestionNum-1].answers[index];
+            ulEl.appendChild(li);
+        }
+    }
+    if(quiz[currentQuestionNum-1].qType==="true/false"){
+            var liTrue = document.createElement("li");
+            liTrue.setAttribute("value", true);
+            liTrue.textContent="true";
+            var liFalse = document.createElement("li");
+            liFalse.setAttribute("value", false);
+            liFalse.textContent="false";
+            ulEl.appendChild(liTrue);
+            ulEl.appendChild(liFalse);
+
+    }
+}
+
+
 
 
 function questionsArrayGenerator(){

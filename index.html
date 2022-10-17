@@ -10,10 +10,12 @@
 <body>
     <div class="card">
         <h1>Welcome to the JavaScript quiz!</h1>
-        <form>
+        <form id="studentInfo">
             <input type="text" id="studentName" placeholder="Enter your name here">
             <button type="submit" id="start">Start quiz</button>
         </form>
+        <p>Question <span id="currentNum"></span> from <span id="totalNum"></span></p>
+        <button id="answer">Answer</button>
     </div>
     <script src="./assets/script/main.js"></script> 
 </body>
