@@ -1,4 +1,5 @@
 var quiz = [];
+var tempArrOfAnswers=[];
 var qNum = 1;
 var h1El = document.querySelector("h1");
 var formEl = document.querySelector("#studentInfo");
@@ -42,7 +43,7 @@ buttonAnswer.addEventListener("click", function(event){
 });
 
 function createQuestionCard(){
-    var currentQuestionNum = qNum;
+    var currentQuestionNum = qNum-1;
     var totalQuestionsNum = quiz.length;
     spanCurrentNum.innerHTML = currentQuestionNum;
     spanTotalNum.innerHTML = totalQuestionsNum;
@@ -52,38 +53,45 @@ function createQuestionCard(){
     questionName.setAttribute("id", "questionName");
     var ulEl = document.createElement("ul");
     ulEl.setAttribute("id", "listOfAnswers");
-    questionName.innerHTML = quiz[currentQuestionNum-1].qName;
+    questionName.innerHTML = quiz[currentQuestionNum].qName;
     pEl.appendChild(questionName);
     questionName.appendChild(ulEl);
-    if(quiz[currentQuestionNum-1].qType==="single"){
-        for (let index = 0; index < quiz[currentQuestionNum-1].answers.length; index++) {
+    if(quiz[currentQuestionNum].qType==="single"){
+        for (let index = 0; index < quiz[currentQuestionNum].answers.length; index++) {
             var li = document.createElement("li");
-            li.textContent = quiz[currentQuestionNum-1].answers[index];
+            li.setAttribute("id", index);
+            li.setAttribute("data-q-index", currentQuestionNum);
+            li.style = "list-style-type: none";
+            li.textContent = quiz[currentQuestionNum].answers[index];
             ulEl.appendChild(li);
         }
     }
-    if(quiz[currentQuestionNum-1].qType==="multiple"){
-        for (let index = 0; index < quiz[currentQuestionNum-1].answers.length; index++) {
+    if(quiz[currentQuestionNum].qType==="multiple"){
+        for (let index = 0; index < quiz[currentQuestionNum].answers.length; index++) {
             var li = document.createElement("li");
-            li.textContent = quiz[currentQuestionNum-1].answers[index];
+            li.setAttribute("id", index);
+            li.setAttribute("data-q-index", currentQuestionNum);
+            li.style = "list-style-type: none";
+            li.textContent = quiz[currentQuestionNum].answers[index];
             ulEl.appendChild(li);
         }
     }
-    if(quiz[currentQuestionNum-1].qType==="true/false"){
+    if(quiz[currentQuestionNum].qType==="true/false"){
             var liTrue = document.createElement("li");
-            liTrue.setAttribute("value", true);
+            liTrue.style ="list-style-type: none";
+            liTrue.setAttribute("value", "true");
+            liTrue.setAttribute("data-q-index", currentQuestionNum);
             liTrue.textContent="true";
             var liFalse = document.createElement("li");
-            liFalse.setAttribute("value", false);
+            liFalse.style ="list-style-type: none";
+            liFalse.setAttribute("data-q-index", currentQuestionNum);
+            liFalse.setAttribute("value", "false");
             liFalse.textContent="false";
             ulEl.appendChild(liTrue);
             ulEl.appendChild(liFalse);
 
     }
 }
-
-
-
 
 function questionsArrayGenerator(){
     //initial questions array
@@ -149,7 +157,7 @@ function questionsArrayGenerator(){
                     qType: "true/false"
                 };
                 trueFalseQ.qName = initArr[index].replace("~Qb: ","");;
-                trueFalseQ.correctAnswer = (initArr[index+1]==="true")?true:false;
+                trueFalseQ.correctAnswer = initArr[index+1];
                 quiz.push(trueFalseQ);
             }
 
@@ -161,3 +169,19 @@ function questionsArrayGenerator(){
 function clearQuestions(){
     quiz =[];
 }
+
+document.addEventListener("click",function(event){
+    if(event.target.tagName==="LI"){
+        if((quiz[event.target.dataset.qIndex].qType === "single") || (quiz[event.target.dataset.qIndex].qType === "true/false")){
+            console.log(event.target.textContent===quiz[event.target.dataset.qIndex].correctAnswer);
+        }
+        else
+        if(quiz[event.target.dataset.qIndex].qType === "multiple"){
+            tempArrOfAnswers.splice(event.target.id, 0, event.target.textContent);
+            console.log(tempArrOfAnswers);
+            console.log(quiz[event.target.dataset.qIndex].correctAnswers);
+            console.log(JSON.stringify(tempArrOfAnswers) == JSON.stringify(quiz[event.target.dataset.qIndex].correctAnswers));
+        }       
+    }
+    
+});
