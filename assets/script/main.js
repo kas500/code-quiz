@@ -2,12 +2,15 @@ var quiz = [];
 var tempArrOfAnswers=[];
 var resultsArr = [];
 var qNum = 0;
+
+var body = document.querySelector("body");
 var h1El = document.querySelector("h1");
 var formEl = document.querySelector("#studentInfo");
 var buttonStart = document.querySelector("#start");
 var studentNameField = document.querySelector("#studentName");
 var studentName = studentNameField.value;
 var pEl = document.querySelector("p");
+var correctOrWrongEl = document.querySelector("#correctOrWrong");
 var spanCurrentNum = document.querySelector("#currentNum");
 var spanTotalNum = document.querySelector("#totalNum");
 pEl.style.visibility = "hidden";
@@ -177,7 +180,7 @@ function createQuestionCard(qNum){
         }
     }
     else{
-        console.log(resultsArr);
+        showResult(resultsArr);
         pEl.remove();
     }
 
@@ -237,6 +240,7 @@ function submitChoise(){
             if ((questionType === "single")||(questionType === "true/false")) {
                 result = (options[0].value.trim()===quiz[questionIndex].correctAnswer.trim())?1:0;
                 resultsArr.push(result);
+                showCorrectWrongMessage(result);
             }
             if (questionType === "multiple") {
                 if (options.length === quiz[questionIndex].correctAnswers.length) {
@@ -246,14 +250,50 @@ function submitChoise(){
                         }
                         else result =  0;
                     }
-                    
                 }
                 else result = 0;
                 resultsArr.push(result);
+                showCorrectWrongMessage(result);
             }
+
             questionCard.remove();
             setTimeout(function(){createQuestionCard(qNum++);},500);
 
     }
     else alert("Select answer");
+}
+
+function showCorrectWrongMessage(result) {
+    correctOrWrongEl.innerHTML = (result===1)?"Correct":"Wrong";
+    setTimeout(function() {
+      correctOrWrongEl.innerHTML = "";
+    }, 500)
+  }
+
+function showResult(resultsArr){
+    var correctAnswersCount = 0;
+    resultsArr.forEach(element => {
+        if(element === 1){
+            correctAnswersCount++;
+        }
+    });
+
+    console.log((correctAnswersCount*100)/resultsArr.length);
+    var yourResultDiv = document.createElement("div");
+    yourResultDiv.setAttribute("id", "result");
+    var yourResultP = document.createElement("p");
+    yourResultP.textContent = "Your result is "+(correctAnswersCount*100)/resultsArr.length+" %";
+    yourResultDiv.appendChild(yourResultP);
+    body.appendChild(yourResultDiv);
+    var showStatisticBtn = document.createElement("button");
+    showStatisticBtn.setAttribute("id", "stat");
+    showStatisticBtn.textContent = "Show statistic";
+    body.appendChild(showStatisticBtn);
+    var startAgainBtn = document.createElement("button");
+    startAgainBtn.setAttribute("id", "refresh");
+    startAgainBtn.setAttribute("onClick", "window.location.reload()");
+    startAgainBtn.textContent = "Restart";
+    var brEl = document.createElement("br");
+    body.appendChild(brEl); 
+    body.appendChild(startAgainBtn);
 }
