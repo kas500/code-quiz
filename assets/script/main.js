@@ -227,6 +227,9 @@ document.addEventListener("click",function(event){
         event.preventDefault();
         submitChoise();
     }
+    if(event.target.id==="btnStat"){
+        showStatisticAlert(JSON.parse(localStorage.getItem("results")));
+    }
 });    
 
 function submitChoise(){
@@ -284,7 +287,7 @@ function showResult(resultsArr){
     yourResultDiv.appendChild(yourResultP);
     body.appendChild(yourResultDiv);
     var showStatisticBtn = document.createElement("button");
-    showStatisticBtn.setAttribute("id", "stat");
+    showStatisticBtn.setAttribute("id", "btnStat");
     showStatisticBtn.textContent = "Show statistic";
     body.appendChild(showStatisticBtn);
     var startAgainBtn = document.createElement("button");
@@ -303,7 +306,23 @@ function addToSorage(name, result){
         personName: name,
         result: result
     }
-    statisticArr = JSON.parse(window.localStorage.getItem("results"));
-    statisticArr.push(statItem); 
+    statisticArr = (JSON.parse(window.localStorage.getItem("results")) != null) ? JSON.parse(window.localStorage.getItem("results")):[];
+    
+    if(statisticArr.some(obj => obj.personName === name)){
+        var existingObject =  statisticArr.find(obj => obj.personName === name);
+        existingObject.result = (existingObject.result<result)? result: existingObject.result;
+    }
+    else statisticArr.push(statItem);
+
     window.localStorage.setItem("results", JSON.stringify(statisticArr));
+}
+
+
+function showStatisticAlert(arr) {
+    arr.sort((a,b) => b.result - a.result);
+    var messageStat = "";
+    arr.forEach(element => {
+        messageStat = messageStat + "Student name: "+arr.personName +" High score: "+arr.result + "%\n";
+    });
+    alert(messageStat);
 }
