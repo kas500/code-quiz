@@ -1,6 +1,7 @@
 var quiz = [];
 var tempArrOfAnswers=[];
 var resultsArr = [];
+var statisticArr = [];
 var qNum = 0;
 
 var body = document.querySelector("body");
@@ -14,8 +15,6 @@ var correctOrWrongEl = document.querySelector("#correctOrWrong");
 var spanCurrentNum = document.querySelector("#currentNum");
 var spanTotalNum = document.querySelector("#totalNum");
 pEl.style.visibility = "hidden";
-localStorage.setItem("studentName","") ;
-localStorage.setItem("maxScore", "");
 
 
 function questionsArrayGenerator(){
@@ -277,12 +276,11 @@ function showResult(resultsArr){
             correctAnswersCount++;
         }
     });
-
-    console.log((correctAnswersCount*100)/resultsArr.length);
+    var resultPersantage = (correctAnswersCount*100)/resultsArr.length;
     var yourResultDiv = document.createElement("div");
     yourResultDiv.setAttribute("id", "result");
     var yourResultP = document.createElement("p");
-    yourResultP.textContent = "Your result is "+(correctAnswersCount*100)/resultsArr.length+" %";
+    yourResultP.textContent = "Your result is "+resultPersantage+" %";
     yourResultDiv.appendChild(yourResultP);
     body.appendChild(yourResultDiv);
     var showStatisticBtn = document.createElement("button");
@@ -296,4 +294,16 @@ function showResult(resultsArr){
     var brEl = document.createElement("br");
     body.appendChild(brEl); 
     body.appendChild(startAgainBtn);
+
+    addToSorage(studentNameField.value,resultPersantage);
+}
+
+function addToSorage(name, result){
+    var statItem = {
+        personName: name,
+        result: result
+    }
+    statisticArr = JSON.parse(window.localStorage.getItem("results"));
+    statisticArr.push(statItem); 
+    window.localStorage.setItem("results", JSON.stringify(statisticArr));
 }
