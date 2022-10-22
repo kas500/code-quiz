@@ -126,10 +126,7 @@ function createQuestionCard(qNum){
                 var brEl = document.createElement("br");
                 fieldsetEl.appendChild(brEl);
             }
-        var buttonAnswer = document.createElement("button");
-        buttonAnswer.setAttribute("id", "btnAnswer");
-        buttonAnswer.textContent = "Answer";
-        fieldsetEl.appendChild(buttonAnswer);
+        createAnswerButton(fieldsetEl);
         }
         if(quiz[currentQuestionNum].qType==="multiple"){
             for (let index = 0; index < quiz[currentQuestionNum].answers.length; index++) {
@@ -147,10 +144,7 @@ function createQuestionCard(qNum){
                 var brEl = document.createElement("br");
                 fieldsetEl.appendChild(brEl);
             }
-            var buttonAnswer = document.createElement("button");
-            buttonAnswer.textContent = "Answer";
-            buttonAnswer.setAttribute("id", "btnAnswer");
-            fieldsetEl.appendChild(buttonAnswer);
+        createAnswerButton(fieldsetEl);
         }
         if(quiz[currentQuestionNum].qType==="true/false"){
                 var inputElTrue = document.createElement("input");
@@ -179,10 +173,7 @@ function createQuestionCard(qNum){
                 fieldsetEl.appendChild(labelElFalse);
                 var brEl = document.createElement("br");
                 fieldsetEl.appendChild(brEl);
-                var buttonAnswer = document.createElement("button");
-                buttonAnswer.textContent = "Answer";
-                buttonAnswer.setAttribute("id", "btnAnswer");
-                fieldsetEl.appendChild(buttonAnswer);
+                createAnswerButton(fieldsetEl);
         }
     }
     else{
@@ -193,6 +184,12 @@ function createQuestionCard(qNum){
     
 };
 
+function createAnswerButton(fieldsetEl){
+    var buttonAnswer = document.createElement("button");
+    buttonAnswer.setAttribute("id", "btnAnswer");
+    buttonAnswer.textContent = "Answer";
+    fieldsetEl.appendChild(buttonAnswer);
+}
 
 buttonStart.addEventListener("click", function(event){
     event.stopPropagation();
