@@ -3,6 +3,8 @@ var tempArrOfAnswers=[];
 var resultsArr = [];
 var statisticArr = [];
 var qNum = 0;
+var secondsLeft = 60;
+
 
 var body = document.querySelector("body");
 var h1El = document.querySelector("h1");
@@ -14,7 +16,10 @@ var pEl = document.querySelector("p");
 var correctOrWrongEl = document.querySelector("#correctOrWrong");
 var spanCurrentNum = document.querySelector("#currentNum");
 var spanTotalNum = document.querySelector("#totalNum");
+var spanTimer = document.querySelector("#timer");
 pEl.style.visibility = "hidden";
+
+
 
 
 function questionsArrayGenerator(){
@@ -89,6 +94,26 @@ function questionsArrayGenerator(){
         
     }
 }
+
+
+function setTime() {
+    var timerInterval = setInterval(function() {
+        spanTimer.textContent = secondsLeft;
+        secondsLeft--;
+        console.log(secondsLeft);
+        if(secondsLeft === 0) {
+            console.log("why");
+            if(document.querySelectorAll("form").length>0){
+                document.querySelector("form").remove();
+            }
+            pEl.remove();
+            showResult(resultsArr);
+            clearInterval(timerInterval);
+        }
+    }, 1000);
+  }
+
+
 
 function clearQuestions(){
     quiz =[];
@@ -194,6 +219,7 @@ function createAnswerButton(fieldsetEl){
 }
 
 buttonStart.addEventListener("click", function(event){
+    setTime();
     event.stopPropagation();
     if(studentNameField.value!==""){
         event.preventDefault();
@@ -228,7 +254,7 @@ document.addEventListener("click",function(event){
         submitChoise();
     }
     if(event.target.id==="btnStat"){
-        showStatisticAlert(JSON.parse(localStorage.getItem("results")));
+        showStatisticAlert(JSON.parse(window.localStorage.getItem("results")));
     }
 });    
 
@@ -243,6 +269,7 @@ function submitChoise(){
                 result = (options[0].value.trim()===quiz[questionIndex].correctAnswer.trim())?1:0;
                 resultsArr.push(result);
                 showCorrectWrongMessage(result);
+                timerPenalty(result);
             }
             if (questionType === "multiple") {
                 if (options.length === quiz[questionIndex].correctAnswers.length) {
@@ -256,10 +283,11 @@ function submitChoise(){
                 else result = 0;
                 resultsArr.push(result);
                 showCorrectWrongMessage(result);
+                timerPenalty(result);
             }
 
             questionCard.remove();
-            setTimeout(function(){createQuestionCard(qNum++);},500);
+            setTimeout(function(){createQuestionCard(qNum++);},350);
 
     }
     else alert("Select answer");
@@ -269,16 +297,22 @@ function showCorrectWrongMessage(result) {
     correctOrWrongEl.innerHTML = (result===1)?"Correct":"Wrong";
     setTimeout(function() {
       correctOrWrongEl.innerHTML = "";
-    }, 500)
+    }, 350)
   }
 
 function showResult(resultsArr){
     var correctAnswersCount = 0;
-    resultsArr.forEach(element => {
+    if (resultsArr.length<quiz.length) {
+        resultPersantage = 0;
+    }else{
+        resultsArr.forEach(element => {
         if(element === 1){
             correctAnswersCount++;
         }
-    });
+         });
+    }
+    
+   
     var resultPersantage = (correctAnswersCount*100)/resultsArr.length;
     var yourResultDiv = document.createElement("div");
     yourResultDiv.setAttribute("id", "result");
@@ -322,7 +356,18 @@ function showStatisticAlert(arr) {
     arr.sort((a,b) => b.result - a.result);
     var messageStat = "";
     arr.forEach(element => {
-        messageStat = messageStat + "Student name: "+arr.personName +" High score: "+arr.result + "%\n";
+        messageStat = messageStat + "Student name: "+element.personName +", High score: "+element.result + "%\n";
     });
     alert(messageStat);
+}
+
+function timerPenalty(result){
+    if (result === 0) {
+        if (secondsLeft-10>0) {
+            secondsLeft=secondsLeft-10;
+        }
+        else secondsLeft=1;
+        
+        
+    }
 }
