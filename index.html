@@ -5,18 +5,17 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Code quiz</title>
+    <link rel="stylesheet" type="text/css" href="./assets/css/reset.css" />
     <link rel="stylesheet" href="./assets/css/style.css">
 </head>
 <body>
-    <div class="card">
-        <h1>Welcome to the JavaScript quiz!</h1>
-        <form id="studentInfo">
-            <input type="text" id="studentName" placeholder="Enter your name here">
+    <div class="quiz">
+        <h1 class="typing">Welcome to the JavaScript quiz!</h1>
+            <input type="text" id="studentName" placeholder="Enter your name here"><br>
             <button type="submit" id="start">Start quiz</button>
-        </form>
-        <p>Question <span id="currentNum"></span> from <span id="totalNum"></span>. Seconds left: <span id="timer"></span></p>
+        <p>Question <span id="currentNum"></span> from <span id="totalNum"></span>. Seconds left: <span id="timer" class="blink"></span></p>
         <p id="correctOrWrong"></p>
-        <!-- <button id="answer">Answer</button> -->
+
     </div>
     <script src="./assets/script/main.js"></script> 
 </body>

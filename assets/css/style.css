@@ -1,0 +1,84 @@
+*{
+    margin: 10px;
+    font-family: monospace;
+    font-size: 16px;
+
+}
+h1{
+    font-size: 2em;
+}
+h2{
+    font-size: 1.5em;
+    text-align: center;
+}
+p,span{
+    margin:0;
+    text-align: center;
+}
+div {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-top: 10%;
+    text-align: left;
+}
+
+form{
+    margin-top: 5%;
+    text-align: left;
+    width: 600px;
+}
+
+label {
+    margin-left: 3px;
+}
+
+button {
+    width: 100px;
+}
+
+fieldset{
+    box-shadow: 5px 10px #888888;
+    border-color: white;
+}
+
+#correctOrWrong{
+    font-size: 2em;
+    margin: 25px;
+}
+
+#studentName{
+    width: 300px;
+    text-align: center;
+}
+
+
+.typing {
+    width: 31ch;
+    animation: typing 2s steps(30), blink .5s step-end infinite alternate;
+    white-space: nowrap;
+    overflow: hidden;
+    border-right: 3px solid;
+  }
+  
+  @keyframes typing {
+    from {
+      width: 0
+    }
+  }
+      
+  @keyframes blink {
+    50% {
+      border-color: transparent
+    }
+  }
+
+  .blink{
+    animation: blinker 1s linear infinite;
+  }
+  
+  @keyframes blinker {
+    50% {
+      opacity: 0;
+    }
+  }

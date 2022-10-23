@@ -5,21 +5,19 @@ var statisticArr = [];
 var qNum = 0;
 var secondsLeft = 60;
 
-
 var body = document.querySelector("body");
 var h1El = document.querySelector("h1");
-var formEl = document.querySelector("#studentInfo");
+var formEl = document.querySelector("quiz");
 var buttonStart = document.querySelector("#start");
 var studentNameField = document.querySelector("#studentName");
 var studentName = studentNameField.value;
+var buttonStart = document.querySelector("#start");
 var pEl = document.querySelector("p");
 var correctOrWrongEl = document.querySelector("#correctOrWrong");
 var spanCurrentNum = document.querySelector("#currentNum");
 var spanTotalNum = document.querySelector("#totalNum");
 var spanTimer = document.querySelector("#timer");
 pEl.style.visibility = "hidden";
-
-
 
 
 function questionsArrayGenerator(){
@@ -95,14 +93,14 @@ function questionsArrayGenerator(){
     }
 }
 
-
 function setTime() {
     var timerInterval = setInterval(function() {
         spanTimer.textContent = secondsLeft;
         secondsLeft--;
-        console.log(secondsLeft);
+        if (secondsLeft<9){
+           spanTimer.style.color = "red";     
+        }
         if(secondsLeft === 0) {
-            console.log("why");
             if(document.querySelectorAll("form").length>0){
                 document.querySelector("form").remove();
             }
@@ -110,10 +108,9 @@ function setTime() {
             showResult(resultsArr);
             clearInterval(timerInterval);
         }
+        
     }, 1000);
   }
-
-
 
 function clearQuestions(){
     quiz =[];
@@ -226,7 +223,8 @@ buttonStart.addEventListener("click", function(event){
         clearQuestions()
         questionsArrayGenerator();
         h1El.remove();
-        formEl.remove();
+        studentNameField.style.visibility = "hidden";
+        buttonStart.style.visibility = "hidden";
         createQuestionCard(qNum++);
     }
     else alert("Please enter your name");
@@ -254,6 +252,7 @@ document.addEventListener("click",function(event){
         submitChoise();
     }
     if(event.target.id==="btnStat"){
+        event.preventDefault();
         showStatisticAlert(JSON.parse(window.localStorage.getItem("results")));
     }
 });    
@@ -295,15 +294,20 @@ function submitChoise(){
 
 function showCorrectWrongMessage(result) {
     correctOrWrongEl.innerHTML = (result===1)?"Correct":"Wrong";
+    correctOrWrongEl.style.color = (result===1)?"green":"red";
     setTimeout(function() {
       correctOrWrongEl.innerHTML = "";
     }, 350)
   }
 
 function showResult(resultsArr){
+    secondsLeft = 0;
     var correctAnswersCount = 0;
-    if (resultsArr.length<quiz.length) {
+    if (resultsArr.length<quiz.length || resultsArr === null) {
         resultPersantage = 0;
+        var gameOverH2 = document.createElement("h2");   
+        gameOverH2.textContent = "Game Over!";
+        body.appendChild(gameOverH2);
     }else{
         resultsArr.forEach(element => {
         if(element === 1){
@@ -314,6 +318,7 @@ function showResult(resultsArr){
     
    
     var resultPersantage = (correctAnswersCount*100)/resultsArr.length;
+    resultPersantage = Number.isNaN(resultPersantage)?0:resultPersantage;
     var yourResultDiv = document.createElement("div");
     yourResultDiv.setAttribute("id", "result");
     var yourResultP = document.createElement("p");
@@ -323,14 +328,14 @@ function showResult(resultsArr){
     var showStatisticBtn = document.createElement("button");
     showStatisticBtn.setAttribute("id", "btnStat");
     showStatisticBtn.textContent = "Show statistic";
-    body.appendChild(showStatisticBtn);
+    yourResultDiv.appendChild(showStatisticBtn);
     var startAgainBtn = document.createElement("button");
     startAgainBtn.setAttribute("id", "refresh");
     startAgainBtn.setAttribute("onClick", "window.location.reload()");
     startAgainBtn.textContent = "Restart";
     var brEl = document.createElement("br");
-    body.appendChild(brEl); 
-    body.appendChild(startAgainBtn);
+    yourResultDiv.appendChild(brEl); 
+    yourResultDiv.appendChild(startAgainBtn);
 
     addToSorage(studentNameField.value,resultPersantage);
 }
